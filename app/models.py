@@ -33,7 +33,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(250), nullable=False)
     data_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
-    def __init__(self, username, email, password, displayname):
+    def __init__(self, username, email, displayname, password):
         self.username = username
         self.email = email.lower()
         self.displayname = displayname.lower()
