@@ -1,15 +1,8 @@
 from flask import Blueprint, jsonify, request, render_template,redirect
 
-from app.models import User
+from app.models import User, db, Character
 
 api = Blueprint('api', __name__, url_prefix='/api')
-
-from app.models import db, Character
-
-@api.route('/test')
-def test():
-    #jsonify transforms python dictionary( or list ) into json data
-    return jsonify({'datadatadata': 'whoa this is some cool data'}) 
 
 # route for getting all characters
 @api.route('/characters',methods=['GET'])
@@ -21,7 +14,16 @@ def getCharacters():
     return jsonify(characters)
 
 # route for getting one character
-
+@api.route('/characters/name/<string:name>', methods = ['GET'])
+def getCharacter(name):
+    """
+    [GET] that accepts series name jthrough url and either gets series in our database or returns that we dont have that series in our database
+    """
+    name = Character.query.filter_by(name=name.title()).first()
+    if name:
+        return jsonify(name.to_dict()),200
+    else:
+        return jsonify({'Request failed': 'No character with that name in our database'}),404
 
 # route for creating a new character
 @api.route('/create/character', methods=['POST'])
