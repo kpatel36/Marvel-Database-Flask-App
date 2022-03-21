@@ -39,3 +39,47 @@ class User(db.Model, UserMixin):
         self.displayname = displayname.lower()
         self.password = generate_password_hash(password)
         self.id = str(uuid4())
+
+# new DB model for Marvel Characters
+# @ start - only name, description, comics # and ID not nullable, rest can have constraints added later
+class Character(db.Model):
+    id = db.Column(db.String(50), primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    comics_number = db.Column(db.Integer(), nullable=False)
+    superpower = db.Column(db.String(100))
+    alias = db.Column(db.String(50))
+    date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+
+    # user submitting a POST request to create a new character will be sending a python dictionary that you'll use to make your object
+    def __init__(self,dict):
+        """
+        expected dict structure:
+        {
+            'name': <str>,
+            'description':<str>
+            'comics_number':<int>
+            'superpower':<str>
+            'alias':<str>,
+            'datecreated':<str>
+        }
+        """
+        self.name = dict['name']
+        self.description = dict['description']
+        self.comics_number = dict['comics_number']
+        self.superpower = dict.get('superpower')
+        self.alias = dict.get('alias')
+        self.id = str(uuid4())
+
+
+    def to_dict(self):
+        # translate object into dictionary
+        # take self and return a dictionary containing K'V pair for each attribute
+        return {
+            'id':self.id,
+            'name':self.name,
+            'description':self.description,
+            'comics_number':self.comics_number,
+            'superpower' : self.superpower,
+            'alias': self.alias 
+        }
