@@ -1,0 +1,20 @@
+{% extends 'components/index.html' %}
+
+{% block pagetitle %}
+Character Search
+{% endblock pagetitle %}
+
+
+{% block content %}
+<div class="col-6">
+    {{ search_form.hidden_tag() }}
+    <form class="form-inline" method="POST">
+        <div class="form-group">
+            {{ search_form.characterName.label(class="mr-3") }}
+            {{ search_form.characterName(class="mr-3 form-control", placeholder="Character Name")}}
+        </div>
+        {{ search_form.submit(class="btn btn-danger") }}
+    </form>
+</div>
+
+{% endblock content %}
