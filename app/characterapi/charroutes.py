@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, render_template,redirect
 
 from app.models import User, db, Character
+from .services import token_required
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -27,6 +28,7 @@ def getCharacter(name):
 
 # route for creating a new character
 @api.route('/create/character', methods=['POST'])
+@token_required
 def create_character():
     """
     [POST] creates new char in our db with data provided in the request body expected data format:
@@ -58,6 +60,7 @@ def updateChar(id):
 
 # route for deleting a character
 @api.route('/character/remove/<string:id>', methods=['DELETE'])
+@token_required
 def deleteCharacter(id):
     character = Character.query.get(id)
     if not character:

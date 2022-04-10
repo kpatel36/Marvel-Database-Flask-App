@@ -22,6 +22,7 @@ def load_user(user_id):
 from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash
 from uuid import uuid4
+from secrets import token_hex
 
 
 # create database model 
@@ -31,7 +32,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(60), nullable=False, unique=True)
     displayname = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
-    data_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    api_token =db.Column(db.String(32))
 
     def __init__(self, username, email, displayname, password):
         self.username = username
@@ -39,6 +41,9 @@ class User(db.Model, UserMixin):
         self.displayname = displayname.lower()
         self.password = generate_password_hash(password)
         self.id = str(uuid4())
+
+    def generate_token(self):
+        self.api_token=token_hex(16)
 
 # new DB model for Marvel Characters
 # @ start - only name, description, comics # and ID not nullable, rest can have constraints added later
